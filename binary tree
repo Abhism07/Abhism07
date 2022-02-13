@@ -1,41 +1,66 @@
 #include<iostream>
-#include <stdlib.h>
 using namespace std;
 #include<string.h>
 struct node
 {
-      int data;
+      string data;
       struct node*right;
       struct node*left;
 
-      node(int val)
+      node(string val)
       {
-            val=data;
+            data=val;
             left=NULL;
             right=NULL;
       }
 };
 
-void traversePreOrder(struct node *temp) {
+void PreOrder(struct node *temp) {
   if (temp != NULL) {
-    cout << " " << temp->data;
-    traversePreOrder(temp->left);
-    traversePreOrder(temp->right);
+    cout << "  " << temp->data;
+    PreOrder(temp->left);
+    PreOrder(temp->right);
   }
 }
 
 int main()
 {
 
-      struct node*root=new node(1);
-      root->left=new node(2);
-      root->right=new node(3);
+      struct node*root=new node("FDS");
+      root->left=new node("HASH");
+      root->right=new node("TREE");
+      /*        A
+               /  \
+               B   C
 
-      root->left->left=new node(5);
-      root->left->right=new node(6);
+      */
 
-      root->right->left=new node(7);
-      root->right->right=new node(8);
-      traversePreOrder(root);
+      root->left->left=new node("HASHING");
+      root->left->right=new node("COLLISION");
+
+      root->right->left=new node("GENERIC");
+      root->right->right=new node("BINARY");
+       /*        A
+                / \
+               B   C
+              / \  / \
+              D E  F  G
+
+      */
+      root->left->left->left=new node("keys");
+      root->left->left->right=new node("table");
+
+      root->right->left->right=new node("PARENT");
+      root->right->right->left=new node("search");
+      /*
+                 A
+                / \
+               B   C
+              / \  / \
+              D E  F   G
+             /   \  \  /
+            H     I  j k
+      */
+      PreOrder(root);
 
 }
