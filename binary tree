@@ -15,18 +15,39 @@ struct node
       }
 };
 
+void inorder(struct node *temp)
+{
+      if (temp != NULL)
+      {
+            inorder(temp->left);
+            cout<<" "<<temp->data;
+            inorder(temp->right);
+      }
+
+}
+
+
 void PreOrder(struct node *temp) {
   if (temp != NULL) {
     cout << "  " << temp->data;
-    PreOrder(temp->left);
+  PreOrder(temp->left);
     PreOrder(temp->right);
   }
+}
+
+postorder(struct node *temp)
+{
+      if (temp != NULL){
+            postorder(temp->left);
+            postorder(temp->right);
+            cout<<" "<<temp->data;
+      }
 }
 
 int main()
 {
 
-      struct node*root=new node("FDS");
+      struct node*root=new node("DSA");
       root->left=new node("HASH");
       root->right=new node("TREE");
       /*        A
@@ -38,8 +59,8 @@ int main()
       root->left->left=new node("HASHING");
       root->left->right=new node("COLLISION");
 
-      root->right->left=new node("GENERIC");
-      root->right->right=new node("BINARY");
+      root->right->left=new node("GENERIC TREE ");
+      root->right->right=new node("BINARY TREE");
        /*        A
                 / \
                B   C
@@ -47,20 +68,30 @@ int main()
               D E  F  G
 
       */
-      root->left->left->left=new node("keys");
-      root->left->left->right=new node("table");
+      root->left->left->left=new node("KEYS");
+      root->left->left->right=new node("TABLE");
+       root->right->left->right=new node("REPRESENTATION");
 
-      root->right->left->right=new node("PARENT");
-      root->right->right->left=new node("search");
+      root->right->right->right=new node("TYPES");
+      root->right->right->left=new node("PROPERTIES");
       /*
                  A
                 / \
-               B   C
-              / \  / \
+               B    C
+              / \  /  \
               D E  F   G
-             /   \  \  /
-            H     I  j k
+             /   \  \  / \
+            H     I  j k  L
       */
+      cout<<"inorder traversal:";
+      inorder(root);
+      cout<<"\n"<<endl;
+      cout<<"preorder traversal:";
       PreOrder(root);
+      cout<<"\n"<<endl;
+      cout<<"Postorder traversal:";
+      postorder(root);
+      cout<<"\n"<<endl;
+
 
 }
