@@ -1,0 +1,70 @@
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+int n,m;
+const int N =999;
+vector<vector<int> > g[N]; //2D array
+vector<int> dist(N),parent(N);
+vector<bool> vis(N);
+const int inf=99999;
+int cost=0;
+void prims(int src)
+{
+     for(int i=0;i<n;i++)
+     {
+           dist[i]=inf; //initialize every distance as infinity
+     }
+     set< vector<int>> s;
+     dist[src]=0;
+     s.insert({0,src}); //insret zero with cost 0
+     //set format:{wt, vertex}
+     cout<<"Minimum spanning tree is:"<<endl;
+     cout<<"u"<<" v"<<" w"<<endl;
+     while(!s.empty())
+     {
+           auto x= *(s.begin());  //extract the top element
+           vis[x[1]]= true; //the vertex is visited make it true
+           s.erase(x); //after extraction delete it
+           int u= x[1];  //edge
+           int v=parent[x[1]]; //parent
+           int w=x[0]; //weight
+
+
+           cout<<u<<" "<<v<<" "<<w<<"\n";
+           cost+=w;
+            for(auto it:g[x[1]])
+            {
+                  if (vis[it[0]]) //if edge is visited with less wt then continue
+                        continue;
+                  if (dist[it[0]]>it[1])//update the edge
+                  {
+                        s.erase({dist[it[0]],it[0]});
+                        dist[it[0]]=it[1];//updated distance to the wt
+                        s.insert({dist[it[0]],it[0]});//insert new distance in the set
+                        parent[it[0]] = x[1];//update the pa
+                  }
+            }
+
+     }
+
+}
+
+int main()
+{
+      cout<<"enter the no. of vertices and edges (hit space after every value then hit enter):"<<endl;
+      cin>>n>>m;
+      cout<<endl;
+      cout<<"Enter vertices and cost of the edges:"<<endl;
+      cout<<"u"<<" v"<<" w"<<endl;
+      for(int i=0;i<m;i++)
+      {
+            int u,v,w;
+            cin>>u>>v>>w;
+            g[u].push_back({v,w});
+            g[v].push_back({u,w});
+      }
+      prims(0);
+      cout<<"Total cost of minimum spanning tree is:"<<cost;
+}
+
+
