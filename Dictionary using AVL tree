@@ -1,0 +1,428 @@
+/*Abhishek Mandave
+   Abhism07
+   Dictionary using AVL tree*/
+
+
+ #include<iostream>
+using namespace std;
+#include<string.h>
+
+ typedef struct node
+{
+ 	char k[20];
+ 	char m[20];
+ 	class node  *left;
+ 	class node * right;
+ 	int nheight;
+}node;
+
+class dict
+{
+public:
+      node *root;
+      void create();
+      void disp(node *);
+      node* insertk(node *root, node *temp);
+      int searchk(node *, char[]);
+      int update(node *, char[]);
+      node  *del(node *,char[]);
+      node * min(node *);
+      int height(node *root);
+       int getbal(node *root);
+      int balancefactor(node *root, node *temp);
+//      int bal(node *root)
+      node *rightrot(node *y);
+      node *leftrot(node *x);
+
+};
+int dict::height(node *root)
+{
+      if(root == NULL)
+            return -1;
+      max(height(root->left),height(root->right))+1;
+
+}
+
+int dict::balancefactor(node *root, node *temp)
+{
+      if(root!=NULL)
+            return height(root->left)- height(root->right);
+}
+
+node* dict:: rightrot(node *y)
+{
+
+       node *x = y->left;
+    node *T2 = x->right;
+
+    // Perform rotation
+    x->right = y;
+    y->left = T2;
+
+    // Update heights
+  y->nheight = max(height(y->left),
+                    height(y->right)) + 1;
+   x->nheight= max(height(x->left),
+                    height(x->right)) + 1;
+
+    // Return new root
+    return x;
+}
+
+node* dict::leftrot(node *x)
+{
+      node *y = x->right;
+    node *T2 = y->left;
+
+    // Perform rotation
+    y->left = x;
+    x->right = T2;
+
+    // Update heights
+    x->nheight = max(height(x->left),
+                    height(x->right)) + 1;
+    y->nheight = max(height(y->left),
+                    height(y->right)) + 1;
+
+    // Return new root
+    return y;
+}
+int dict::getbal(node *root)
+{
+      if(root==NULL)
+            return 0;
+      return height(root->left) - height(root->right);
+}
+
+void dict :: create()
+      {
+            node *temp;
+            int ch;
+            do
+            {
+                  temp =new node();
+                  cout<<"\n Enter the keyword:";
+                  cin>>temp->k;
+                  cout<<"\n Enter the meaning: ";
+                  cin>>temp->m;
+                temp->left=NULL;
+                 temp->right=NULL;
+                 if (root==NULL)
+                 {
+                       root=temp;
+                 }
+                 else{
+                  insertk(root,temp);
+                 }
+                 cout<<"DO you want to add key(y=1/n=0):";
+                 cin>>ch;
+            }
+            while (ch==1);
+      }
+      node* dict ::insertk(node *root, node *temp)
+      {
+            if(strcmp(temp->k, root->k)<0)
+            {
+                  if (root->left == NULL)
+                  {
+                              root->left=temp;
+
+                  }
+                  else{
+                        insertk(root->left,temp);
+                  }
+            }
+            else
+            {
+                  if(root->right==NULL)
+                  {
+                        root->right=temp;
+
+                  }
+                  else{
+                        insertk(root->right,temp);
+                  }
+            }
+            return root;
+
+        root->nheight = 1 + max(height(root->left),
+                        height(root->right));
+
+
+    int balance = getbal(root);
+
+    if (balance > 1 && temp->k < root->left->k)
+        return rightrot(root);
+
+    // Right Right Case
+    if (balance < -1 && temp->k > root->right->k)
+        return leftrot(root);
+
+    // Left Right Case
+    if (balance > 1 && temp->k > root->left->k)
+    {
+        root->left = leftrot(root->left);
+        return rightrot(root);
+    }
+
+    // Right Left Case
+    if (balance < -1 && temp->k < root->right->k)
+    {
+        root->right = rightrot(root->right);
+        return leftrot(root);
+    }
+
+    /* return the (unchanged) root pointer */
+    return root;
+
+      }
+
+
+
+     void dict :: disp(node *root)
+     {
+           if(root != NULL)
+           {
+                 disp(root->left);
+                 cout<<"\nKey word:"<<root->k;
+                 cout<<"\n meaning:"<<root->m;
+                 node * min(node *);
+                 disp(root->right);
+                 //disp(root->left);
+           }
+     }
+int dict :: searchk(node * root,char k[20])
+{
+ int c=0;
+ while(root != NULL)
+ {
+ 		 c++;
+ 		 if(strcmp (k,root->k) == 0)
+ 		 {
+  			 cout<<"\nNo of Comparisons:"<<c;
+   return 1;
+  		}
+ 		 if(strcmp (k, root->k) < 0)
+  			 root = root->left;
+
+if(strcmp (k, root->k) > 0)
+ 			  root = root->right;
+ }
+return -1;
+}
+
+     int dict :: update(node * root,char k[20])
+{
+ 	while(root != NULL)
+ 	{
+ 		 if(strcmp (k,root->k) == 0)
+ 		 {
+   			cout<<"\nEnter New Meaning of Keyword "<<root->k<<":";
+   			cin>>root->m;
+  			 return 1;
+  		}
+  		if(strcmp (k, root->k) < 0)
+   			{root = root->left;}
+  		if(strcmp (k, root->k) > 0)
+  			 {root = root->right;}
+ }
+ return -1;
+}
+node* dict :: del(node * root,char k[20])
+{
+ 	node *temp;
+if(root == NULL)
+ {
+  		cout<<"\nElement No Found";
+  		return root;
+ }
+if (strcmp(k,root->k) < 0)
+ {
+ 		 root->left = del(root->left, k);
+  		return root;
+ }
+ if (strcmp(k,root->k) > 0)
+ 	{
+   		root->right = del(root->right, k);
+   		return root;
+ }
+ 	if (root->right==NULL&&root->left==NULL)
+ 	{
+ 		 temp = root;
+ 		 delete temp;
+  		return NULL;
+  	}
+ 	 if(root->right==NULL)
+  	{
+  		temp = root;
+  		root = root->left;
+delete temp;
+  		return root;
+  	}
+ 	 else if(root->left==NULL)
+  	{
+  temp = root;
+  		root = root->right;
+  		delete temp;
+ return root;
+ 	 }
+ 	 //node with two child
+  	temp = min(root->right);
+ strcpy(root->k,temp->k);
+ root->right = del(root->right, temp->k);
+ 	 return root;
+}
+node * dict :: min(node *q)
+{
+ 	while(q->left != NULL)
+ {
+  		q = q->left;
+ }
+ 	return q;
+}
+
+int main()
+{
+ 	int ch;
+ 	dict d;
+ d.root = NULL;
+do
+ 	{
+cout<<"\nMenu\n1.Create\n2.Disp\n3.Search\n4.Update\n5.Delete\nEnter Ur CH:";
+  cin>>ch;
+switch(ch)
+  		{
+case 1: d.create();
+ 				 break;
+case 2: if(d.root == NULL)
+  				{
+  					cout<<"\nNo any Keyword";
+ 				 }
+  				else
+  				{
+ 					 d.disp(d.root);
+ 				 }
+ 				 break;
+case 3: if(d.root == NULL)
+ 				{
+cout<<"\nDictionary is Empty. First add keywords then try again ";
+ }
+  				else
+ 				{
+cout<<"\nEnter Keyword which u want to search:";
+  					char k[20];
+  					cin>>k;
+					 if( d.searchk(d.root,k) == 1)
+  						cout<<"\nKeyword Found";
+  					else
+  						cout<<"\nKeyword Not Found";
+ }
+  				break;
+case 4:
+      if(d.root == NULL)
+{
+cout<<"\nDictionary is Empty. First add keywords then try again ";
+ }
+  				else
+  				{
+  				cout<<"\nEnter Keyword which meaning  want to update:";
+ 				 char k[20];
+  				cin>>k;
+  				if(d.update(d.root,k) == 1)
+  					cout<<"\nMeaning Updated";
+ 				 else
+  					cout<<"\nMeaning Not Found";
+  				}
+ 				 break;
+case 5:
+  if(d.root == NULL)
+ 			 {
+cout<<"\nDictionary is Empty. First add keywords then try again ";
+  			}
+ 			 else
+  			{
+  			cout<<"\nEnter Keyword which u want to delete:";
+  			char k[20];
+  			cin>>k;
+ 			 if(d.root == NULL)
+  			{
+  				cout<<"\nNo any Keyword";
+  			}
+  			else
+  			{
+  				d.root = d.del(d.root,k);
+    			}
+  		 }
+ 	 }
+ }
+ while(ch<=5);
+ return 0;
+}
+
+
+___________________________________________________________________________________________________________________________________________________________________
+//output:
+/* 
+
+Menu
+1.Create
+2.Disp
+3.Search
+4.Update
+5.Delete
+Enter Ur CH:1
+
+ Enter the keyword:s
+
+ Enter the meaning: sun
+DO you want to add key(y=1/n=0):1
+
+ Enter the keyword:d
+
+ Enter the meaning: dog
+DO you want to add key(y=1/n=0):1
+
+ Enter the keyword:c
+
+ Enter the meaning: cat
+DO you want to add key(y=1/n=0):1
+
+ Enter the keyword:a
+
+ Enter the meaning: avl
+DO you want to add key(y=1/n=0):1
+
+ Enter the keyword:t
+
+ Enter the meaning: top
+DO you want to add key(y=1/n=0):0
+
+Menu
+1.Create
+2.Disp
+3.Search
+4.Update
+5.Delete
+Enter Ur CH:2
+
+Key word:a
+ meaning:avl
+Key word:c
+ meaning:cat
+Key word:d
+ meaning:dog
+Key word:s
+ meaning:sun
+Key word:t
+ meaning:top
+Menu
+1.Create
+2.Disp
+3.Search
+4.Update
+5.Delete
+Enter Ur CH:
+
+*/
+
+
