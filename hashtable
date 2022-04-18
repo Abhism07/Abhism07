@@ -1,0 +1,61 @@
+import pprint
+
+class Hashtable:
+    def __init__(self, elements):
+        self.bucket_size = len(elements)
+        self.buckets = [[] for i in range(self.bucket_size)]
+        self._assign_buckets(elements)
+
+    def _assign_buckets(self, elements):
+        for key, value in elements:
+            hashed_value = hash(key)
+            index = hashed_value % self.bucket_size
+            self.buckets[index].append((key, value))
+
+    def get_value(self, input_key):
+        hashed_value = hash(input_key)
+        index = hashed_value % self.bucket_size
+        bucket = self.buckets[index]
+        for key, value in bucket:
+            if key == input_key:
+                return(value)
+        return None
+
+    def buckets(self, elements):
+            self.buckets = [None] * self.bucket_size
+
+            for key, value in elements:
+                hashed = hash(key)
+                index = hashed % self.bucket_size
+
+                while self.buckets[index] is not None:
+                    print(f"The key {key} collided with {self.buckets[index]}")
+                index = (index + 1) % self.bucket_size
+
+            self.buckets[index] = ((key, value))
+
+    def value(self, input_key):
+        hashed = hash(input_key)
+        ind = hashed % self.bucket_size
+        while self.buckets[ind] is not None:
+         key, value = self.buckets[ind]
+        if key == input_key:
+         return value
+
+         ind = (ind + 1) % self.bucket_size
+
+    def __str__(self):
+        return pprint.pformat(self.buckets) # here pformat is used to return a printable representation of the object
+
+
+if __name__ == "__main__":
+     number = [
+        (841289,78945),(98745,12456),(48659,98521),(987451,85201),(98751423,89745),(98756,45623),(985210,88541),(99874,841288)
+         ,(74568,8974520),(89745,96230),(98745,30254)
+    ]
+
+
+
+hashtable = Hashtable(number)
+print(hashtable)
+
