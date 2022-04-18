@@ -1,0 +1,74 @@
+#include<iostream>
+using namespace std;
+
+class student
+{
+public:
+      int roll;
+      int marks;
+      float marks1;
+      char name[20];
+      float att;
+      int prac;
+
+      void create()
+      {
+            cout<<" \n\n\n\t\t\t   ****AUTOMATED TERM WORK ASSESMENT***** \n\n  "<<endl;
+            int ch;
+            do{
+            cout<<"\t\tEnter students name:";
+            cin>>name;
+            cout<<"\t\tEnter students roll no.:";
+            cin>>roll;
+            cout<<"\t\tEnter students attendance in %: ";
+            cin>>att;
+            cout<<"\t\tEnter students practical performance(out of 50):";
+            cin>>marks;
+            cout<<"\t\tEnter overall percentage of student:";
+            cin>>marks1;
+
+            if(marks>30 && marks1>75 && att>70)
+            {
+                  cout<<"\n\t"<<name<<" ";
+                  cout<<"no assesment needed"<<endl;
+            }
+
+            else if(marks<30 && marks<70 && att<70)
+            {
+                  cout<<"\n\t"<<name;
+                  cout<<" Need to concentrate on practical completion and coding!! ";
+                  cout<<"need to improve in theory and viva!! "<<endl;
+                   cout<<"Less attendance, not eligible for examination!! "<<endl;
+
+            }
+
+            else if(marks<30 && marks<70)
+            {
+                  cout<<"\n\t"<<name;
+                  cout<<" Need to concentrate on practical completion and coding!! ";
+                  cout<<"need to improve in theory and viva!! "<<endl;
+            }
+            else if(marks>30 && marks1<75)
+            {
+                  cout<<"\n\t"<<name<<" ";
+                  cout<<" Practise more theory questions and maths numericals "<<endl;
+
+            }
+
+
+
+
+            cout<<"DO you want to add new entry(y=1/n=0):";
+                 cin>>ch;
+            }
+            while(ch==1);
+
+      }
+
+};
+
+int main()
+{
+      student s;
+      s.create();
+}
