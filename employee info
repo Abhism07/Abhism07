@@ -1,0 +1,169 @@
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+
+using namespace std;
+
+//Employee class Declaration
+class Employee{
+    private:
+        int code;
+        char name[20];
+        char designation[20];
+        float salary;
+    public:
+        void read();
+        void display();
+        //will return employee code
+        int getEmpCode()            { return code;}
+        //will return employee salary
+        int getSalary()             { return salary;}
+
+};
+
+//Read employee record
+void Employee::read(){
+      Employee emp[100];
+      int num;
+      cout<<"Enter number of employees:";
+      cin>>num;
+      for(int i=0;i<num;i++){
+    cout<<"Enter employee code: ";
+    cin>>emp[i].code;
+    cout<<"Enter name: ";
+    //cin.ignore(1);
+    //cin.getline(name,20);
+    cin>>emp[i].name;
+    cout<<"Enter salary: ";
+    cin>>emp[i].salary;
+    cout<<"Enter designation:";
+    //cin.ignore(1);
+    //cin.getline(designation,20);
+    cin>>emp[i].designation;
+      }
+}
+
+//Display employee record
+void Employee::display()
+{     Employee emp[100];
+     for(int i=0;i<10;i++);
+    cout<<emp[i].code<<"\t"<<emp[i].name<<"\t"<<emp[i].salary<<"\t"<<emp[i].designation<<endl;
+}
+
+//global declaration
+fstream file;
+
+//Will delete file when program is being executed
+//because we are create file in append mode
+void deleteExistingFile(){
+
+    remove("EMPLOYEE.DAT");
+}
+
+//function to append record into file
+void appendToFille(){
+    Employee    x;
+
+    //Read employee record from user
+    x.read();
+
+    file.open("EMPLOYEE.DAT",ios::binary|ios::app);
+    if(!file){
+        cout<<"ERROR IN CREATING FILE\n";
+        return;
+    }
+    //write into file
+    file.write((char*)&x,sizeof(x));
+    file.close();
+    cout<<"Record added sucessfully.\n";
+}
+
+void displayAll(){
+    Employee    x;
+
+    file.open("EMPLOYEE.DAT",ios::binary|ios::in);
+    if(!file){
+        cout<<"ERROR IN OPENING FILE \n";
+        return;
+    }
+    while(file){
+    if(file.read((char*)&x,sizeof(x)))
+        if(x.getSalary()>=10000 && x.getSalary()<=90000)
+            x.display();
+    }
+  file.close();
+}
+
+void searchForRecord(){
+    //read employee id
+    Employee    x;
+    int c;
+    int isFound=0;
+
+    cout<<"Enter employee code: ";
+    cin>>c;
+
+
+    file.open("EMPLOYEE.DAT",ios::binary|ios::in);
+    if(!file){
+        cout<<"ERROR IN OPENING FILE \n";
+        return;
+    }
+    while(file){
+        if(file.read((char*)&x,sizeof(x))){
+            if(x.getEmpCode()==c){
+                cout<<"RECORD FOUND\n";
+                x.display();
+                isFound=1;
+                break;
+            }
+        }
+    }
+    if(isFound==0){
+        cout<<"Record not found!!!\n";
+    }
+    file.close();
+}
+
+
+
+int main()
+{
+     char ch;
+
+    //if required then only remove the file
+     deleteExistingFile();
+
+     do{
+     int n;
+
+     cout<<"ENTER CHOICE\n"<<"1.ADD AN EMPLOYEE\n"<<"2.DISPLAY\n"<<"3.SEARCH\n"<<"4.DELETE RECORD\n";
+     cout<<"Make a choice: ";
+     cin>>n;
+
+     switch(n){
+          case 1:
+            appendToFille();
+            break;
+          case 2 :
+            displayAll();
+            break;
+          case 3:
+            searchForRecord();
+            break;
+          case 4:
+            deleteExistingFile();
+            break;
+
+
+          default :
+                cout<<"Invalid Choice\n";
+     }
+
+     cout<<"Do you want to continue ? : ";
+     cin>>ch;
+
+     }while(ch=='Y'||ch=='y');
+
+    return 0;
+}
