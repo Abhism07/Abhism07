@@ -1,169 +1,140 @@
 #include<iostream>
 #include<fstream>
-#include<stdio.h>
-
+#include<string.h>
 using namespace std;
 
-//Employee class Declaration
-class Employee{
-    private:
-        int code;
-        char name[20];
-        char designation[20];
-        float salary;
-    public:
-        void read();
-        void display();
-        //will return employee code
-        int getEmpCode()            { return code;}
-        //will return employee salary
-        int getSalary()             { return salary;}
+class emp
+{
+public:
+      typedef struct employ{int id;
+      char name[100];
+      int salary;
+      int index;
+      char designation[100];}
+      empl;
+      empl info;
+      void create();
+      void disp();
+      int searchi();
+      void Del();
+      int n;
+
 
 };
 
-//Read employee record
-void Employee::read(){
-      Employee emp[100];
+void emp::create()
+{
       int num;
       cout<<"Enter number of employees:";
       cin>>num;
+ofstream fout;
+	fout.open("employee.dat",ios::out|ios::binary);
       for(int i=0;i<num;i++){
-    cout<<"Enter employee code: ";
-    cin>>emp[i].code;
+                  info.index=i+1;
+    cout<<"Enter employee code"<<" of "<<info.index<<": ";
+    cin>>info.id;
     cout<<"Enter name: ";
-    //cin.ignore(1);
-    //cin.getline(name,20);
-    cin>>emp[i].name;
+    cin>>info.name;
     cout<<"Enter salary: ";
-    cin>>emp[i].salary;
+    cin>>info.salary;
     cout<<"Enter designation:";
-    //cin.ignore(1);
-    //cin.getline(designation,20);
-    cin>>emp[i].designation;
+    cin>>info.designation;
+    fout.write((char *)&info,sizeof(empl))<<flush;
       }
+fout.close();
+}
+void emp:: disp()
+{
+      ifstream fin;
+      fin.open("employee.dat",ios::in|ios::binary);
+      fin.seekg(0,ios::beg);
+      cout<<"\n\tThe Content of File are:\n";
+	cout<<"\n\t   id\t\tName\t\tDesignation\t\tsalary";
+
+      while(fin.read((char *)&info,sizeof(empl)))
+	  {
+		if(info.id!=-1)
+       		  cout<<"\n\t"<<info.index<<" "<<info.id<<"\t\t"<<info.name<<"\t\t"<<info.designation<<"\t\t"<<info.salary;
+	  }
+	fin.close();
+
 }
 
-//Display employee record
-void Employee::display()
-{     Employee emp[100];
-     for(int i=0;i<10;i++);
-    cout<<emp[i].code<<"\t"<<emp[i].name<<"\t"<<emp[i].salary<<"\t"<<emp[i].designation<<endl;
+int emp:: searchi()
+{
+      int r,i=0;
+	ifstream fin;
+	fin.open("employee.dat",ios::in|ios::binary);
+	fin.seekg(0,ios::beg);
+	cout<<"\n\tEnter a ID No: ";
+	cin>>r;
+	while(fin.read((char *)&info,sizeof(empl)))
+	  {
+		if(info.id==r)
+		  {
+			cout<<"\n\tRecord Found...\n";
+			cout<<"\n\tID\tName\tDESIGNATION\tSALARY";
+			cout<<"\n\t"<<info.id<<"\t\t"<<info.name<<"\t\t"<<info.designation<<"\t\t"<<info.salary;
+			return i;
+		  }
+		i++;
+	  }
+	fin.close();
+	return 0;
 }
-
-//global declaration
-fstream file;
-
-//Will delete file when program is being executed
-//because we are create file in append mode
-void deleteExistingFile(){
-
-    remove("EMPLOYEE.DAT");
-}
-
-//function to append record into file
-void appendToFille(){
-    Employee    x;
-
-    //Read employee record from user
-    x.read();
-
-    file.open("EMPLOYEE.DAT",ios::binary|ios::app);
-    if(!file){
-        cout<<"ERROR IN CREATING FILE\n";
-        return;
-    }
-    //write into file
-    file.write((char*)&x,sizeof(x));
-    file.close();
-    cout<<"Record added sucessfully.\n";
-}
-
-void displayAll(){
-    Employee    x;
-
-    file.open("EMPLOYEE.DAT",ios::binary|ios::in);
-    if(!file){
-        cout<<"ERROR IN OPENING FILE \n";
-        return;
-    }
-    while(file){
-    if(file.read((char*)&x,sizeof(x)))
-        if(x.getSalary()>=10000 && x.getSalary()<=90000)
-            x.display();
-    }
-  file.close();
-}
-
-void searchForRecord(){
-    //read employee id
-    Employee    x;
-    int c;
-    int isFound=0;
-
-    cout<<"Enter employee code: ";
-    cin>>c;
-
-
-    file.open("EMPLOYEE.DAT",ios::binary|ios::in);
-    if(!file){
-        cout<<"ERROR IN OPENING FILE \n";
-        return;
-    }
-    while(file){
-        if(file.read((char*)&x,sizeof(x))){
-            if(x.getEmpCode()==c){
-                cout<<"RECORD FOUND\n";
-                x.display();
-                isFound=1;
-                break;
-            }
-        }
-    }
-    if(isFound==0){
-        cout<<"Record not found!!!\n";
-    }
-    file.close();
-}
-
-
-
+void emp::Del()
+  {
+	int pos;
+	pos=searchi();
+	fstream f;
+	f.open("employee.dat",ios::in|ios::out|ios::binary);
+	f.seekg(0,ios::beg);
+	/*if(pos==0)
+	  {
+		cout<<"\n\tRecord Not Found";
+		return;
+	  }*/
+	  int i;
+	int offset=pos*sizeof(empl);
+	f.seekp(offset);
+	info.id=-1;
+	strcpy(info.name,"NULL");
+	strcpy(info.designation,"NULL");
+	info.salary=-1;
+	f.write((char *)&info,sizeof(empl));
+	f.seekg(0);
+	f.close();
+	cout<<"\n\tRecord Deleted";
+	info.index=i-1;
+  }
 int main()
 {
-     char ch;
-
-    //if required then only remove the file
-     deleteExistingFile();
-
-     do{
-     int n;
-
-     cout<<"ENTER CHOICE\n"<<"1.ADD AN EMPLOYEE\n"<<"2.DISPLAY\n"<<"3.SEARCH\n"<<"4.DELETE RECORD\n";
-     cout<<"Make a choice: ";
-     cin>>n;
-
-     switch(n){
-          case 1:
-            appendToFille();
-            break;
-          case 2 :
-            displayAll();
-            break;
-          case 3:
-            searchForRecord();
-            break;
-          case 4:
-            deleteExistingFile();
-            break;
-
-
-          default :
-                cout<<"Invalid Choice\n";
-     }
-
-     cout<<"Do you want to continue ? : ";
-     cin>>ch;
-
-     }while(ch=='Y'||ch=='y');
-
-    return 0;
+      emp e;
+      int ch,key;
+	char ans;
+      do
+      {
+            cout<<"**********MENU************"<<endl;
+            cout<<"\n\t1. Create\n\t2. Display\n\t3. Delete\n\t4. Search\n\t";
+		cout<<"\n\t Enter Your Choice: ";
+		cin>>ch;
+		switch(ch)
+		{
+            case 1:
+                  e.create();
+                  break;
+            case 2:
+                  e.disp();
+                  break;
+            case 3:
+                  e.Del();
+                  break;
+            case 4:
+                  e.searchi();
+                  break;
+		}
+		cout<<"\n\tDo You Want to Continue in Main Menu(y/n): ";
+		cin>>ans;
+      }while(ans=='y'||ans=='Y');
+return 1;
 }
