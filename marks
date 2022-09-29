@@ -1,0 +1,25 @@
+create table stud_marks(name varchar2(20),marks number(5));
+create table result (rno number(5),name varchar2(20),class varchar2(20));
+
+create procedure proc_Grade11(rno number,name varchar2,marks number) is
+class varchar2(20);
+
+begin
+if(marks<=1500 and marks>=990) then
+class:='DISTINCTION';
+elsif(marks<=989 and marks>=900) then
+class:='First';
+elsif(marks<=899 and marks >=825) then
+class:='Higher second';
+else
+class:='pass';
+end if;
+insert into stud_marks values(name,marks);
+insert into result values(rno,name,class);
+end;
+/
+exec proc_Grade11(404,'malan',0000);
+select * from stud_marks;
+select * from result;
+
+
